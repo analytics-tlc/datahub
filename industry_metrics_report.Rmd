@@ -1,0 +1,87 @@
+---
+title: "Industry Metrics Flash Report (`r I(Sys.Date())`)."
+output: 
+  flexdashboard::flex_dashboard:
+    theme: yeti
+params:
+  metric: NA
+  for_im: NA
+---
+```{r,echo=FALSE}
+im = params$for_im
+
+#extract dates
+#start_date = sort(im$month_date)[1]
+end_date = sort(im$month_date, decreasing = T)[1]
+m = params$metric
+
+#extract stats
+med = im[license_class == "Yellow", ..m][1,1]
+shl = im[license_class == "Green", ..m][1,1]
+hv = im[license_class == "FHV - High Volume", ..m][1,1]
+blk = im[license_class == "FHV - Black Car", ..m][1,1]
+liv = im[license_class == "FHV - Livery", ..m][1,1]
+lux = im[license_class == "FHV - Lux Limo", ..m][1,1]
+
+```  
+
+    
+Column {data-width=350}
+-------------------------------------
+
+
+### Latest Monthly Metrics {data-height=800}
+**`r HTML(paste0("<h2>", 'For the Month of ', end_date,':',"</h2>"))`**
+\  
+\  
+`r HTML(paste0("<h3>",'Monthly Yellow ', gsub("_"," ",params$metric),': ', med,"</h3>"))`
+\  
+`r HTML(paste0("<h3>",'Monthly Green ', gsub("_"," ",params$metric),': ', shl,"</h3>"))`
+\  
+`r HTML(paste0("<h3>",'Monthly FHV - High Volume ', gsub("_"," ",params$metric),': ', hv,"<h3>"))`
+\  
+`r HTML(paste0("<h3>",'Monthly FHV - Black Car ', gsub("_"," ",params$metric),': ', blk,"<h3>"))`
+\  
+`r HTML(paste0("<h3>",'Monthly FHV - Livery ', gsub("_"," ",params$metric),': ', liv,"<h3>"))`
+\  
+`r HTML(paste0("<h3>",'Monthly FHV - Lux Limo ', gsub("_"," ",params$metric),': ', lux,"<h3>"))`
+
+Column {data-width=500}
+-------------------------------------
+
+### Chosen Metric Trend {data-height=500}
+
+```{r}
+
+#my_var = c("month_date", "license_class", get(params$metric))
+#my_data = im[,my_var]
+#names(my_data)[3] = "count"
+
+im %>%
+  group_by(license_class) %>%
+  e_charts(month_date) %>%
+  e_line(unique_vehicles) %>%
+  e_theme("infographic") %>%
+  e_tooltip(trigger = 'axis') %>%
+  echarts4r::e_legend(type = 'scroll')%>%
+  e_color(
+  c("navy", "#ca76b6",'red','blue','green','yellow')
+  )
+```
+
+
+### Market Share Across the Industry (Avg Trips Per Day) {data-height=500}
+
+```{r}
+im %>%
+  group_by(license_class) %>%
+  e_charts(month_date) %>%
+  e_line(trips_per_day) %>%
+  e_theme("infographic") %>%
+  e_tooltip(trigger = 'axis') %>%
+  echarts4r::e_legend(type = 'scroll')%>%
+  e_color(
+  c("navy", "#ca76b6",'red','blue','green','yellow')
+  )
+```
+

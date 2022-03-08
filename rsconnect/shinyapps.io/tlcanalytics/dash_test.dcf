@@ -1,0 +1,13 @@
+name: dash_test
+title: dash_test
+username:
+account: tlcanalytics
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1265240
+bundleId: 5297661
+url: https://tlcanalytics.shinyapps.io/dash_test/
+when: 1637962911.48175
+lastSyncTime: 1637962911.48175
+asMultiple: FALSE
+asStatic: FALSE

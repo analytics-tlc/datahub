@@ -1,0 +1,101 @@
+---
+title: "Flash Report (`r I(Sys.Date())`)."
+output: 
+  flexdashboard::flex_dashboard:
+    theme: yeti
+params:
+  zone: NA
+  metric: NA
+  industry: NA
+  monthly: NA
+  dif: NA
+  rat: NA
+  all: NA
+  mon: NA
+  lag: NA
+  a: NA
+  b: NA
+  test: NA
+  shape: NA
+  for_map: NA
+  pal: NA 
+---
+```{r,echo=FALSE}
+
+
+
+
+ data <- params$for_map
+leaf <- params$shape
+pale <- params$pal
+ test <- params$test 
+    
+```  
+  
+    
+Column {data-width=500}
+-------------------------------------
+    
+### Trip Highlights {data-height=290}
+    
+**`r HTML(paste0("<h2>",'Service Zone: ', params$zone,"</h2>"))`** 
+**`r HTML(paste0("<h3>",'Metric: ',params$metric,"</h3>"))`** 
+**`r HTML(paste0("<h3>",'Industry: ',params$industry,"</h3>"))`**
+
+
+
+### Trip Details {data-height=480}
+`r HTML(paste0("<h4>",'Monthly ', params$metric,': ', params$monthly,"</h4>"))`
+`r HTML(paste0("<h4>",'Ratio of ', params$zone, ' ',params$metric, ' to All: ',  paste0(round(params$monthly/params$all * 100),'%'),"</h4>"))`
+`r HTML(paste0("<h4>",params$metric," difference between ",as.yearmon(params$mon, "%Y-%m-%d"), " and ",as.yearmon(params$mon %m-% months(as.numeric(params$lag))),": ",params$dif,"</h4>"))`
+`r HTML(paste0("<h4>",params$metric," % difference between ",as.yearmon(params$mon, "%Y-%m-%d"), " and ",as.yearmon(params$mon %m-% months(as.numeric(params$lag))),": ", params$rat,'%',"</h4>"))`   
+`r HTML(paste0("<h4>",'Daily (average) ', params$metric,': ',round(params$a/params$b),"</h4>"))`
+`r HTML(paste0("<h4>",'Ratio of ', params$zone, ' ',params$metric, ' to All: ',  paste0(round(params$a/params$all * 100),'%'),"</h4>"))`
+`r HTML(paste0("<h4>",params$metric," (Daily Average) difference between ",as.yearmon(params$mon, "%Y-%m-%d"), " and ",as.yearmon(params$mon %m-% months(as.numeric(params$lag))),": ",round(params$dif/params$b),"</h4>"))` 
+`r HTML(paste0("<h4>",params$metric," % difference between ",as.yearmon(params$mon, "%Y-%m-%d"), " and ",as.yearmon(params$mon %m-% months(as.numeric(params$lag))),": ", params$rat,'%',"</h4>"))` 
+
+### Trip Trend {data-height=420}
+
+```{r}
+
+
+test$year_month <- floor_date(test$year_month, 'months')
+ec <- test %>% dplyr::filter(company == params$industry) %>% dplyr::group_by(year_month, company, metric) %>% dplyr::summarise(count = sum(count))
+  
+            ec <- ec %>% group_by(company) %>%
+              e_charts(year_month) %>%
+              e_bar(count) %>%
+              e_theme("infographic") %>%
+              e_tooltip(trigger = 'axis') %>%
+              echarts4r::e_legend(type = 'scroll')
+            ec
+```
+
+
+Column {data-width=500}
+-------------------------------------
+   
+### Map
+
+```{r}
+
+leaf@data <- left_join(leaf@data, data, by="id")
+
+pal <- colorNumeric(palette = "OrRd",domain=c(min(pale$count),max(pale$count)))
+ leaflet(options = leafletOptions(minZoom = 10, maxZoom = 13)) %>%
+                    setView(-73.9908, 40.7075, zoom = 11) %>%
+                     addPolygons(data = leaf, weight = 1.3,
+                            color = ~pal(count),
+                            fillOpacity = 0.9,
+                            popup = paste0("Zone: ", leaf@data$zone, "<br>",
+                                           "Count: ", format(leaf@data$count, big.mark = ",")),
+                            highlightOptions = highlightOptions(weight = 6,
+                                                                color = "orange",
+                                                                bringToFront = TRUE), layerId = ~zone, label = ~zone) %>%
+                
+                addLegend("bottomright", pal <- pal, values = leaf@data$count,
+                          title = "Trip Counts"
+                )
+```   
+ 
+

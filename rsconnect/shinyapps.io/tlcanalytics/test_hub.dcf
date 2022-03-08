@@ -1,0 +1,12 @@
+name: test_hub
+title: test_hub
+username:
+account: tlcanalytics
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1090129
+bundleId: 2324562
+url: https://tlcanalytics.shinyapps.io/test_hub/
+when: 1565924695.05561
+asMultiple: FALSE
+asStatic: FALSE
