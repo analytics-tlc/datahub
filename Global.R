@@ -30,7 +30,7 @@
   library(flexdashboard)
   library(arrow)
  
-  #install_version("shinydashboardPlus", version="0.7.5",repos = "http://cran.us.r-project.org")
+ 
   options(scipen = 999)
 
 #############################################################
