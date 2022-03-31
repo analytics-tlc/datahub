@@ -69,14 +69,16 @@ colnames(lookup)[1] <- 'id'
 #########
 
 
-data1 <- read_parquet('data/trips_updated.parquet')
+#data1 <- read_parquet('data/trips_updated.parquet')
+data1 <- fread('data/trips_updated.csv')
 data1$id <- as.character(data1$id)
 data1 <- data1 %>% dplyr::select(year_month,id,company,Z,count,Zone,metric)
 # data1$year_month <- ymd(data1$year_month)
 
 #data1 <- read_fst('data/trips_updated.fst') %>% dplyr::filter(year_month <= '2021-09-01')
 industry_metrics <- read_fst('data/ind_metr_updated.fst')
-fhvs <- read_parquet('data/fhv3.parquet') %>% dplyr::filter(year_month < last_month, year_month >= '2015-10-01')
+#fhvs <- read_parquet('data/fhv3.parquet') %>% dplyr::filter(year_month < last_month, year_month >= '2015-10-01')
+fhvs <- fread('data/fhv3.csv') %>% dplyr::filter(year_month < last_month, year_month >= '2015-10-01')
 #fhvs <- read.fst('data/fhv.fst') %>% dplyr::filter(year_month <= '2021-09-01', year_month >= '2015-10-01')
 
 pal = c("black", "maroon", "blue", "orange", "dark green", "gold")
