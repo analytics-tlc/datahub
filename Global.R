@@ -126,36 +126,36 @@ feedback_accepted <- function(){showModal(modalDialog(
 ))}
 
 
-welcome <- function(){shinyalert("Welcome To
-              TLC Data Hub!
-              (Beta)", paste0("TLC Data Hub offers users a new and convenient location to access and visualize taxi and for hire industry data.  TLC Data Hub uses public data available on Open Data and the TLC website and does not use, track or display any private information of the drivers or companies. The Hub currently consists of two dashboards. The 'Trip Viz' dashboard allows the public to run queries on TLC-collected trip data while the 'Industry metrics' dashboard provides standard visualizations of monthly industry trends. For your convenience, we placed 'Help' buttons throughout the Data Hub (shown as 'Eye' icons) which include helpful information and data explanations.
-
-Leadership Team:
-Bill Heinzen - Acting Commissioner,
-Rodney Stiles - Deputy Commissioner
-
-Development Team:
-Fausto Lopez - Data Analytics Manager,
-Nikita Voevodin - Policy Analyst
-                         "), imageUrl = 'http://tlc-mag.com/images/Oct15/TLCNYC_LOGO.jpg'
-           ,
-           callbackR = function() {
-             #startTime <- Sys.time()
-               # dbExecute(mydb,paste("INSERT INTO monitor_visits
-               #                                      (count, time)
-               #                                      VALUES('1','",Sys.time(),"');", sep=""))
-             showModal(modalDialog(
-               title = "Tutorial",
-               'Would you like a walkthrough?',
-               footer = tagList(
-                 modalButton("No"),
-                 actionButton(inputId = 'btnYes',label = "Yes")
-               )
-             ))
-             
-             #return(startTime) 
-           }
-)
+welcome <- function() {
+  shinyalert(
+    title = "WARNING: The TLC Data Hub is NO LONGER ACTIVE.",
+    text = tagList(
+      "The Data Hub was last updated in 2022, and is no longer being maintained. For the most recent TLC dashboard updates, please visit:",
+      br(), br(),
+      
+      tags$a(
+        href = "https://www.nyc.gov/site/tlc/about/data-and-research.page",
+        target = "_blank",
+        "TLC data and research"
+      ),
+      br(), br(),
+      "*****"
+    ),
+    imageUrl = 'http://tlc-mag.com/images/Oct15/TLCNYC_LOGO.jpg',
+    callbackR = function() {
+      showModal(modalDialog(
+        title = "Tutorial",
+        'Would you like a walkthrough?',
+        footer = tagList(
+          modalButton("No"),
+          actionButton(inputId = 'btnYes', label = "Yes")
+        )
+      ))
+    },
+    html = TRUE,
+    closeOnClickOutside = TRUE,
+    showCancelButton = FALSE
+  )
 }
 
 
